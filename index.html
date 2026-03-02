@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Levi Card Creator</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg,#1e1e2f,#2b1055);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: white;
+}
+
+.box {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  backdrop-filter: blur(10px);
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #ff4ecd;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ff1493;
+}
+
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Create Card JSON</h2>
+<input type="text" id="name" placeholder="Enter Card Name">
+<input type="text" id="image" placeholder="Paste Image URL">
+<input type="text" id="description" placeholder="Enter Description">
+<input type="text" id="tier" placeholder="Enter Tier">
+<input type="text" id="creators" placeholder="Enter Creators">
+<button onclick="generateJSON()">Generate JSON</button>
+</div>
+
+<script>
+
+function generateJSON() {
+
+  const data = {
+    name: document.getElementById("name").value,
+    image: document.getElementById("image").value,
+    description: document.getElementById("description").value,
+    tier: document.getElementById("tier").value,
+    creators: document.getElementById("creators").value
+  };
+
+  const jsonString = JSON.stringify(data, null, 2);
+
+  const newWindow = window.open();
+  newWindow.document.write("<pre>" + jsonString + "</pre>");
+  newWindow.document.close();
+}
+
+</script>
+
+</body>
+</html>
