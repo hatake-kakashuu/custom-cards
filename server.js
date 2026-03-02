@@ -12,16 +12,20 @@ if (!fs.existsSync(DB_FILE)) {
   fs.writeFileSync(DB_FILE, JSON.stringify([]))
 }
 
+const normalizeTier = (tier) => {
+  return tier.replace(/tier|\s|t/gi, '').toUpperCase()
+}
+
 app.post("/create", (req, res) => {
   const cards = JSON.parse(fs.readFileSync(DB_FILE))
 
   const newCard = {
-    id: cards.length + 1,
-    name: req.body.name,
-    image: req.body.image,
-    description: req.body.description,
-    tier: req.body.tier,
-    creators: req.body.creators
+    id: Date.now(),
+    name: req.body.name.trim(),
+    image: req.body.image.trim(),
+    description: req.body.description.trim(),
+    tier: normalizeTier(req.body.tier.trim()),
+    creators: req.body.creators.trim()
   }
 
   cards.push(newCard)
@@ -38,6 +42,23 @@ app.get("/card:id", (req, res) => {
 
   const { id, ...cardData } = card
   res.json(cardData)
+})
+
+app.delete("/delete/:id", (req, res) => {
+  let cards = JSON.parse(fs.readFileSync(DB_FILE))
+  const id = parseInt(req.params.id)
+
+  const index = cards.findIndex(c => c.id === id)
+
+  if (index === -1) {
+    return res.status(404).json({ error: "Card not found" })
+  }
+
+  cards.splice(index, 1)
+
+  fs.writeFileSync(DB_FILE, JSON.stringify(cards, null, 2))
+
+  res.json({ message: `Card ${id} deleted successfully` })
 })
 
 app.listen(PORT, () => console.log("Server running on " + PORT))
