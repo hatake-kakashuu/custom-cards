@@ -48,37 +48,55 @@ button:hover {
   background: #ff1493;
 }
 
+.status {
+  margin-top: 10px;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
 </style>
 </head>
 <body>
 
 <div class="box">
 <h2>Create Card JSON</h2>
-<input type="text" id="name" placeholder="Enter Card Name">
-<input type="text" id="image" placeholder="Paste Image URL">
-<input type="text" id="description" placeholder="Enter Description">
-<input type="text" id="tier" placeholder="Enter Tier">
-<input type="text" id="creators" placeholder="Enter Creators">
-<button onclick="generateJSON()">Generate JSON</button>
+<input type="text" id="name" placeholder="Enter Card Name" required>
+<input type="text" id="image" placeholder="Paste Image URL" required>
+<input type="text" id="description" placeholder="Enter Description" required>
+<input type="text" id="tier" placeholder="Enter Tier" required>
+<input type="text" id="creators" placeholder="Enter Creators" required>
+<button onclick="createCard()">Create Card</button>
+<div class="status" id="status"></div>
 </div>
 
 <script>
 
-function generateJSON() {
+async function createCard() {
 
-  const data = {
-    name: document.getElementById("name").value,
-    image: document.getElementById("image").value,
-    description: document.getElementById("description").value,
-    tier: document.getElementById("tier").value,
-    creators: document.getElementById("creators").value
-  };
+  const status = document.getElementById("status")
+  status.innerText = "Creating card..."
 
-  const jsonString = JSON.stringify(data, null, 2);
+  const response = await fetch("/create", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      image: document.getElementById("image").value,
+      description: document.getElementById("description").value,
+      tier: document.getElementById("tier").value,
+      creators: document.getElementById("creators").value
+    })
+  })
 
-  const newWindow = window.open();
-  newWindow.document.write("<pre>" + jsonString + "</pre>");
-  newWindow.document.close();
+  const data = await response.json()
+
+  if (data.url) {
+    window.location.href = data.url
+  } else {
+    status.innerText = "Error creating card"
+  }
 }
 
 </script>
