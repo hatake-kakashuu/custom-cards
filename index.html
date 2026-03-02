@@ -63,7 +63,7 @@ button:hover {
 <input type="text" id="name" placeholder="Enter Card Name" required>
 <input type="text" id="image" placeholder="Paste Image URL" required>
 <input type="text" id="description" placeholder="Enter Description" required>
-<input type="text" id="tier" placeholder="Enter Tier" required>
+<input type="text" id="tier" placeholder="Enter Tier (T5, 5, S, etc)" required>
 <input type="text" id="creators" placeholder="Enter Creators" required>
 <button onclick="createCard()">Create Card</button>
 <div class="status" id="status"></div>
@@ -82,11 +82,11 @@ async function createCard() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      name: document.getElementById("name").value,
-      image: document.getElementById("image").value,
-      description: document.getElementById("description").value,
-      tier: document.getElementById("tier").value,
-      creators: document.getElementById("creators").value
+      name: document.getElementById("name").value.trim(),
+      image: document.getElementById("image").value.trim(),
+      description: document.getElementById("description").value.trim(),
+      tier: document.getElementById("tier").value.trim(),
+      creators: document.getElementById("creators").value.trim()
     })
   })
 
